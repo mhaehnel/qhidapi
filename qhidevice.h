@@ -8,12 +8,12 @@
 
 class QHIDAPISHARED_EXPORT QHIDevice : public QObject
 {
-    Q_OBJECT
-    hid_device* _device;
-    QByteArray recvBuf,reportBuf;
-    size_t expectData;
-    QTimer poll, _timeout;
-    explicit QHIDevice(hid_device* dev, QObject *parent = 0);
+	Q_OBJECT
+	QByteArray recvBuf,reportBuf;
+	size_t expectData;
+	hid_device* _device;
+	QTimer poll, _timeout;
+	explicit QHIDevice(hid_device* dev, QObject *parent = 0);
 public:
     explicit QHIDevice(QString path, QObject *parent = 0);
     QHIDevice(quint16 vendor_id, quint16 product_id, QObject *parent = 0);

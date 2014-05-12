@@ -31,3 +31,4 @@ QVector<QHIDInfo> QHIDManager::enumerate(quint16 vendor_id, quint16 product_id) 
     hid_free_enumeration(info);
     return result;
 }
+

@@ -1,6 +1,6 @@
 #include "qhidevice.h"
 #include <cassert>
-
+#include <QDebug>
 
 QHIDevice::QHIDevice(hid_device *dev, QObject *parent) : QObject(parent), _device(dev) {
     hid_set_nonblocking(_device,true);
@@ -11,14 +11,17 @@ QHIDevice::QHIDevice(hid_device *dev, QObject *parent) : QObject(parent), _devic
         unsigned char* buf = new unsigned char[expectData];
         int res = hid_read(_device,buf,expectData);
         if (res == -1) {
+			qDebug() << "ERR!";
             //TODO What to do on error?
         }
+		qDebug() << "Got: " << res;
         recvBuf.append(reinterpret_cast<char*>(buf),res);
         expectData -= res;
+		qDebug() << "Remaining: " << expectData;
         if (expectData == 0) {
-            emit(receivedData(recvBuf));
-            poll.stop();
-            _timeout.stop();
+			poll.stop();
+			_timeout.stop();
+			emit receivedData(recvBuf);
         }
         delete[] buf;
     });
@@ -42,7 +45,8 @@ bool QHIDevice::good() {
 
 
 int QHIDevice::write(const QByteArray &data) {
-    if (_device != nullptr) return -1;
+	if (_device == nullptr) return -1;
+	qDebug() << "Writing";
     return hid_write(_device,reinterpret_cast<const unsigned char*>(data.constData()),data.size());
 }
 
