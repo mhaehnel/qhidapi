@@ -14,10 +14,8 @@ QHIDevice::QHIDevice(hid_device *dev, QObject *parent) : QObject(parent), _devic
 			qDebug() << "ERR!";
             //TODO What to do on error?
         }
-		qDebug() << "Got: " << res;
         recvBuf.append(reinterpret_cast<char*>(buf),res);
         expectData -= res;
-		qDebug() << "Remaining: " << expectData;
         if (expectData == 0) {
 			poll.stop();
 			_timeout.stop();
@@ -46,7 +44,6 @@ bool QHIDevice::good() {
 
 int QHIDevice::write(const QByteArray &data) {
 	if (_device == nullptr) return -1;
-	qDebug() << "Writing";
     return hid_write(_device,reinterpret_cast<const unsigned char*>(data.constData()),data.size());
 }
 
