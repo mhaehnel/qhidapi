@@ -3,6 +3,7 @@
 #include <QDebug>
 
 QHIDevice::QHIDevice(hid_device *dev, QObject *parent) : QObject(parent), _device(dev) {
+	if (_device == nullptr) return;
     hid_set_nonblocking(_device,true);
     poll.setInterval(100);
     _timeout.setSingleShot(true);
@@ -53,14 +54,16 @@ int QHIDevice::sendReport(const QByteArray &data) {
 }
 
 void QHIDevice::getReport(size_t length, int timeout_ms) {
-    _timeout.start(timeout_ms);
+	if (_device == nullptr) return;
+	_timeout.start(timeout_ms);
     expectData = length;
     recvBuf.clear();
     poll.start();
 }
 
 void QHIDevice::read(size_t length, int timeout_ms) {
-    _timeout.start(timeout_ms);
+	if (_device == nullptr) return;
+	_timeout.start(timeout_ms);
     expectData = length;
     recvBuf.clear();
     poll.start();
